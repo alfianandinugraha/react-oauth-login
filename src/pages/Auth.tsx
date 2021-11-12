@@ -1,6 +1,7 @@
+import BaseLayout from '@/layouts/BaseLayout'
 import styled from '@emotion/styled'
 import { Facebook, GitHub, Google } from '@mui/icons-material'
-import { Box, Button, Container, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 
 const OAuthButton = styled(Button)`
@@ -9,7 +10,7 @@ const OAuthButton = styled(Button)`
 
 const AuthPage = (): React.ReactElement => {
   return (
-    <Container maxWidth="md" sx={{ marginTop: '36px' }}>
+    <BaseLayout>
       <Typography variant="h4">Login</Typography>
       <Box
         marginTop="24px"
@@ -55,7 +56,7 @@ const AuthPage = (): React.ReactElement => {
           Login with GitHub
         </OAuthButton>
       </Box>
-    </Container>
+    </BaseLayout>
   )
 }
 
