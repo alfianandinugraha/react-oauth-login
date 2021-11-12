@@ -4,7 +4,7 @@ import { Facebook, GitHub, Google } from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 
-const FACEBOOK_APP_ID = 308645417927319
+const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID || ''
 
 const REDIRECT_URI = 'http://localhost:3000/oauth'
 
