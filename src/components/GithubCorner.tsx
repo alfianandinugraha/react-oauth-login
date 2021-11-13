@@ -6,6 +6,7 @@ const GithubCorner = () => {
       href="https://https://github.com/alfianandinugraha/react-oauth-login"
       className="github-corner"
       aria-label="View source on GitHub"
+      target="__blank"
     >
       <svg
         width="80"
