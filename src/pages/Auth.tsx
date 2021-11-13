@@ -47,7 +47,7 @@ const AuthPage = (): React.ReactElement => {
         const response = ls.get<OAuthResponse | undefined>('oauth-response')
 
         if (response) {
-          if (response.error) {
+          if (response.isError) {
             reject(new Error('Access denied'))
           } else {
             resolve(response)

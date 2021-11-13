@@ -16,7 +16,15 @@ const OAuthPage = (): React.ReactElement => {
 
     if (vendor === 'facebook') {
       const error = searchParams.get('error')
-      if (!error) window.close()
+      if (!error) {
+        const responseError: OAuthResponse = {
+          ...response,
+          isError: true,
+        }
+        ls.set('oauth-response', responseError)
+        window.close()
+        return
+      }
       const facebookResponse: OAuthResponse = {
         ...response,
         success: {
@@ -42,12 +50,7 @@ const OAuthPage = (): React.ReactElement => {
       if (error) {
         const responseError: OAuthResponse = {
           ...response,
-          error: {
-            reason:
-              searchParams.get('error_description') ||
-              'Failed to get user access',
-            type: searchParams.get('error') || 'access_denied',
-          },
+          isError: true,
         }
         ls.set('oauth-response', responseError)
         window.close()

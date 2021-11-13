@@ -4,9 +4,6 @@ declare module 'types' {
     success?: {
       code: string
     }
-    error?: {
-      reason: string
-      type: string
-    }
+    isError?: boolean
   }
 }
