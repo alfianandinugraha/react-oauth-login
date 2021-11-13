@@ -14,6 +14,19 @@ const OAuthPage = (): React.ReactElement => {
       vendor,
     }
 
+    if (code) {
+      const successResponse: OAuthResponse = {
+        ...response,
+        success: {
+          code,
+        },
+      }
+
+      ls.set('oauth-response', successResponse)
+      window.close()
+      return
+    }
+
     if (vendor === 'facebook') {
       const error = searchParams.get('error')
       if (!error) {
@@ -25,14 +38,6 @@ const OAuthPage = (): React.ReactElement => {
         window.close()
         return
       }
-      const facebookResponse: OAuthResponse = {
-        ...response,
-        success: {
-          code,
-        },
-      }
-
-      ls.set('oauth-response', facebookResponse)
     }
 
     if (vendor === 'google') {
@@ -56,9 +61,6 @@ const OAuthPage = (): React.ReactElement => {
         window.close()
         return
       }
-
-      const responseSuccess: OAuthResponse = { ...response, success: { code } }
-      ls.set('oauth-response', responseSuccess)
     }
 
     window.close()
