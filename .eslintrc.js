@@ -17,7 +17,7 @@ const config = {
   ],
   overrides: [
     {
-      files: ['*.ts', '*.tsx', '*/**.ts'],
+      files: ['*.ts', '*/**.tsx', '*/**.ts'],
       parserOptions: {
         project: ['./tsconfig.json'],
       },
