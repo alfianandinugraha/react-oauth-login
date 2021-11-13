@@ -8,6 +8,8 @@ import { OAuthResponse } from 'types'
 
 const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID || ''
 
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || ''
+
 const REDIRECT_URI = 'http://localhost:3000/oauth'
 
 const MAX_OPEN_POPUP = 60000
@@ -51,6 +53,31 @@ const AuthPage = (): React.ReactElement => {
     )
   }
 
+  const googleDialog = () => {
+    const state = JSON.stringify({
+      vendor: 'google',
+    })
+
+    const scopes = [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'openid',
+    ]
+    const scopeAsParam = scopes.reduce((rev, curr) => `${rev}+${curr}`)
+
+    const dialogUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
+    const dialogUrlParam = dialogUrl.searchParams
+    dialogUrlParam.append('scope', scopeAsParam)
+    dialogUrlParam.append('include_granted_scopes', 'true')
+    dialogUrlParam.append('response_type', 'code')
+    dialogUrlParam.append('state', state)
+    dialogUrlParam.append('redirect_uri', REDIRECT_URI)
+    dialogUrlParam.append('client_id', GOOGLE_CLIENT_ID)
+    const url = decodeURIComponent(dialogUrl.toString())
+
+    openDialog(url)
+  }
+
   return (
     <BaseLayout>
       <Typography variant="h4">Login</Typography>
@@ -84,6 +111,7 @@ const AuthPage = (): React.ReactElement => {
               backgroundColor: '#c63328',
             },
           }}
+          onClick={googleDialog}
         >
           Login with Google
         </OAuthButton>

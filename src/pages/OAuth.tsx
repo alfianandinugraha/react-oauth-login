@@ -24,6 +24,17 @@ const OAuthPage = (): React.ReactElement => {
       ls.set('oauth-response', response)
     }
 
+    if (vendor === 'google') {
+      const code = searchParams.get('code') || ''
+      const response: OAuthResponse = {
+        vendor: 'google',
+        success: {
+          code,
+        },
+      }
+      ls.set('oauth-response', response)
+    }
+
     window.close()
   }, [])
   return <h1>OAuth Page</h1>
