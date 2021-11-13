@@ -9,36 +9,35 @@ const OAuthPage = (): React.ReactElement => {
   useEffect(() => {
     const state = JSON.parse(searchParams.get('state') || '')
     const vendor = state.vendor as OAuthResponse['vendor']
+    const code = searchParams.get('code') || ''
+    const response: OAuthResponse = {
+      vendor,
+    }
 
     if (vendor === 'facebook') {
       const error = searchParams.get('error')
       if (!error) window.close()
-
-      const code = searchParams.get('code') || ''
-      const response: OAuthResponse = {
-        vendor: 'facebook',
+      const facebookResponse: OAuthResponse = {
+        ...response,
         success: {
           code,
         },
       }
-      ls.set('oauth-response', response)
+
+      ls.set('oauth-response', facebookResponse)
     }
 
     if (vendor === 'google') {
-      const code = searchParams.get('code') || ''
-      const response: OAuthResponse = {
-        vendor: 'google',
+      const googleResponse: OAuthResponse = {
+        ...response,
         success: {
           code,
         },
       }
-      ls.set('oauth-response', response)
+      ls.set('oauth-response', googleResponse)
     }
 
     if (vendor === 'github') {
-      const response: OAuthResponse = {
-        vendor: 'github',
-      }
       const error = searchParams.get('error')
       if (error) {
         const responseError: OAuthResponse = {
@@ -55,7 +54,6 @@ const OAuthPage = (): React.ReactElement => {
         return
       }
 
-      const code = searchParams.get('code') || ''
       const responseSuccess: OAuthResponse = { ...response, success: { code } }
       ls.set('oauth-response', responseSuccess)
     }
