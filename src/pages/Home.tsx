@@ -51,6 +51,8 @@ const HomePage = (): React.ReactElement => {
   const [googleCode, setGoogleCode] = useState('')
   const [githubCode, setGithubCode] = useState('')
 
+  const hasAnyToken = !!facebookCode || !!githubCode || !!googleCode
+
   const openDialog = (url: string): Promise<OAuthResponse> => {
     const popup = window.open(url, '', 'width=700, height=700,fullscreen=no')
     let openDuration = 0
@@ -173,7 +175,15 @@ const HomePage = (): React.ReactElement => {
 
   return (
     <BaseLayout>
-      <Typography variant="h4">React OAuth Login</Typography>
+      <Typography variant="h4" sx={{ marginBottom: '4px' }}>
+        React OAuth Login
+      </Typography>
+      {hasAnyToken && (
+        <Typography variant="caption" color="GrayText">
+          Send the Access Code to your Back-end via REST API, and let them
+          happily process the Token
+        </Typography>
+      )}
       <Box
         marginTop="24px"
         display="flex"
