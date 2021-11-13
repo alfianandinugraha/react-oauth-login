@@ -5,6 +5,7 @@ import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 import * as ls from 'local-storage'
 import { OAuthResponse } from 'types'
+import toast from 'react-hot-toast'
 
 const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID || ''
 
@@ -22,6 +23,18 @@ const OAuthButton = styled(Button)`
 
 const scopeAsParam = (scopes: string[]) => {
   return scopes.reduce((rev, curr) => `${rev}+${curr}`)
+}
+
+const toastSuccess = () => {
+  toast.success(() => {
+    return <Typography>Access Granted !</Typography>
+  })
+}
+
+const toastError = () => {
+  toast.error(() => {
+    return <Typography>Failed, please try again</Typography>
+  })
 }
 
 const AuthPage = (): React.ReactElement => {
@@ -67,9 +80,14 @@ const AuthPage = (): React.ReactElement => {
     dialogUrlParam.append('redirect_uri', REDIRECT_URI)
     dialogUrlParam.append('client_id', FACEBOOK_APP_ID)
 
-    openDialog(dialogUrl.toString()).then((response) => {
-      console.log(response)
-    })
+    openDialog(dialogUrl.toString())
+      .then((response) => {
+        console.log(response)
+        toastSuccess()
+      })
+      .catch(() => {
+        toastError()
+      })
   }
 
   const googleDialog = () => {
@@ -93,9 +111,14 @@ const AuthPage = (): React.ReactElement => {
     dialogUrlParam.append('client_id', GOOGLE_CLIENT_ID)
     const url = decodeURIComponent(dialogUrl.toString())
 
-    openDialog(url).then((response) => {
-      console.log(response)
-    })
+    openDialog(url)
+      .then((response) => {
+        console.log(response)
+        toastSuccess()
+      })
+      .catch(() => {
+        toastError()
+      })
   }
 
   const githubDialog = () => {
@@ -114,9 +137,14 @@ const AuthPage = (): React.ReactElement => {
     dialogUrlParam.append('scope', scopeAsParam(scopes))
     const url = decodeURIComponent(dialogUrl.toString())
 
-    openDialog(url).then((response) => {
-      console.log(response)
-    })
+    openDialog(url)
+      .then((response) => {
+        console.log(response)
+        toastSuccess()
+      })
+      .catch(() => {
+        toastError()
+      })
   }
 
   return (
