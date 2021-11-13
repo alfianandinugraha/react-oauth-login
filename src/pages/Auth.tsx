@@ -48,9 +48,14 @@ const AuthPage = (): React.ReactElement => {
     const state = JSON.stringify({
       vendor: 'facebook',
     })
-    openDialog(
-      `https://www.facebook.com/v12.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=${REDIRECT_URI}&state=${state}`
-    )
+
+    const dialogUrl = new URL('https://www.facebook.com/v12.0/dialog/oauth')
+    const dialogUrlParam = dialogUrl.searchParams
+    dialogUrlParam.append('state', state)
+    dialogUrlParam.append('redirect_uri', REDIRECT_URI)
+    dialogUrlParam.append('client_id', FACEBOOK_APP_ID)
+
+    openDialog(dialogUrl.toString())
   }
 
   const googleDialog = () => {
