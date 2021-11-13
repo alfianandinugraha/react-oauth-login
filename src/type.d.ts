@@ -1,6 +1,6 @@
 declare module 'types' {
   type OAuthResponse = {
-    vendor: 'facebook'
+    vendor: 'facebook' | 'google'
     success?: {
       code: string
     }
