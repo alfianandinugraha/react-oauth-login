@@ -27,42 +27,11 @@ const OAuthPage = (): React.ReactElement => {
       return
     }
 
-    if (vendor === 'facebook') {
-      const error = searchParams.get('error')
-      if (!error) {
-        const responseError: OAuthResponse = {
-          ...response,
-          isError: true,
-        }
-        ls.set('oauth-response', responseError)
-        window.close()
-        return
-      }
+    const responseError: OAuthResponse = {
+      ...response,
+      isError: true,
     }
-
-    if (vendor === 'google') {
-      const googleResponse: OAuthResponse = {
-        ...response,
-        success: {
-          code,
-        },
-      }
-      ls.set('oauth-response', googleResponse)
-    }
-
-    if (vendor === 'github') {
-      const error = searchParams.get('error')
-      if (error) {
-        const responseError: OAuthResponse = {
-          ...response,
-          isError: true,
-        }
-        ls.set('oauth-response', responseError)
-        window.close()
-        return
-      }
-    }
-
+    ls.set('oauth-response', responseError)
     window.close()
   }, [])
   return <h1>OAuth Page</h1>
