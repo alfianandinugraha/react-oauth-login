@@ -2,7 +2,7 @@ import BaseLayout from '@/layouts/BaseLayout'
 import styled from '@emotion/styled'
 import { Facebook, GitHub, Google } from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import * as ls from 'local-storage'
 import { OAuthResponse } from 'types'
 import toast from 'react-hot-toast'
@@ -38,6 +38,10 @@ const toastError = () => {
 }
 
 const AuthPage = (): React.ReactElement => {
+  const [facebookCode, setFacebookCode] = useState('')
+  const [googleCode, setGoogleCode] = useState('')
+  const [githubCode, setGithubCode] = useState('')
+
   const openDialog = (url: string): Promise<OAuthResponse> => {
     const popup = window.open(url, '', 'width=700, height=700,fullscreen=no')
     let openDuration = 0
@@ -88,9 +92,11 @@ const AuthPage = (): React.ReactElement => {
     openDialog(dialogUrl.toString())
       .then((response) => {
         console.log(response)
+        setFacebookCode(response.success?.code || '')
         toastSuccess()
       })
       .catch(() => {
+        setFacebookCode('')
         toastError()
       })
   }
@@ -119,9 +125,11 @@ const AuthPage = (): React.ReactElement => {
     openDialog(url)
       .then((response) => {
         console.log(response)
+        setGoogleCode(response.success?.code || '')
         toastSuccess()
       })
       .catch(() => {
+        setGoogleCode('')
         toastError()
       })
   }
@@ -145,9 +153,11 @@ const AuthPage = (): React.ReactElement => {
     openDialog(url)
       .then((response) => {
         console.log(response)
+        setGithubCode(response.success?.code || '')
         toastSuccess()
       })
       .catch(() => {
+        setGithubCode('')
         toastError()
       })
   }
@@ -161,46 +171,55 @@ const AuthPage = (): React.ReactElement => {
         flexDirection="column"
         alignItems="start"
       >
-        <OAuthButton
-          variant="contained"
-          color="primary"
-          startIcon={<Facebook />}
-          sx={{
-            backgroundColor: '#365F98',
-            '&:hover': {
-              backgroundColor: '#2b4c7a',
-            },
-          }}
-          onClick={facebookDialog}
-        >
-          Login with Facebook
-        </OAuthButton>
-        <OAuthButton
-          variant="contained"
-          color="primary"
-          startIcon={<Google />}
-          sx={{
-            backgroundColor: '#F74032',
-            '&:hover': {
-              backgroundColor: '#c63328',
-            },
-          }}
-          onClick={googleDialog}
-        >
-          Login with Google
-        </OAuthButton>
-        <OAuthButton
-          variant="contained"
-          color="primary"
-          startIcon={<GitHub />}
-          sx={{
-            backgroundColor: '#000000',
-            '&:hover': { backgroundColor: '#191919' },
-          }}
-          onClick={githubDialog}
-        >
-          Login with GitHub
-        </OAuthButton>
+        <Box>
+          <OAuthButton
+            variant="contained"
+            color="primary"
+            startIcon={<Facebook />}
+            sx={{
+              backgroundColor: '#365F98',
+              '&:hover': {
+                backgroundColor: '#2b4c7a',
+              },
+            }}
+            onClick={facebookDialog}
+          >
+            Login with Facebook
+          </OAuthButton>
+          {facebookCode && <Typography>Access Code: {facebookCode}</Typography>}
+        </Box>
+        <Box>
+          <OAuthButton
+            variant="contained"
+            color="primary"
+            startIcon={<Google />}
+            sx={{
+              backgroundColor: '#F74032',
+              '&:hover': {
+                backgroundColor: '#c63328',
+              },
+            }}
+            onClick={googleDialog}
+          >
+            Login with Google
+          </OAuthButton>
+          {googleCode && <Typography>Access Code: {googleCode}</Typography>}
+        </Box>
+        <Box>
+          <OAuthButton
+            variant="contained"
+            color="primary"
+            startIcon={<GitHub />}
+            sx={{
+              backgroundColor: '#000000',
+              '&:hover': { backgroundColor: '#191919' },
+            }}
+            onClick={githubDialog}
+          >
+            Login with GitHub
+          </OAuthButton>
+          {githubCode && <Typography>Access Code: {githubCode}</Typography>}
+        </Box>
       </Box>
     </BaseLayout>
   )
