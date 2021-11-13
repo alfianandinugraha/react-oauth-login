@@ -1,7 +1,7 @@
 import BaseLayout from '@/layouts/BaseLayout'
 import styled from '@emotion/styled'
 import { Facebook, GitHub, Google } from '@mui/icons-material'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import * as ls from 'local-storage'
 import { OAuthResponse } from 'types'
@@ -18,7 +18,15 @@ const REDIRECT_URI = 'http://localhost:3000/oauth'
 const MAX_OPEN_POPUP = 60000
 
 const OAuthButton = styled(Button)`
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+  align-self: flex-start;
+`
+
+const OAuthBox = styled(Box)`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 `
 
 const scopeAsParam = (scopes: string[]) => {
@@ -171,7 +179,7 @@ const AuthPage = (): React.ReactElement => {
         flexDirection="column"
         alignItems="start"
       >
-        <Box>
+        <OAuthBox>
           <OAuthButton
             variant="contained"
             color="primary"
@@ -186,9 +194,18 @@ const AuthPage = (): React.ReactElement => {
           >
             Login with Facebook
           </OAuthButton>
-          {facebookCode && <Typography>Access Code: {facebookCode}</Typography>}
-        </Box>
-        <Box>
+          {facebookCode && (
+            <TextField
+              label="Access Code"
+              variant="filled"
+              value={facebookCode}
+              fullWidth
+              multiline
+              maxRows={10}
+            />
+          )}
+        </OAuthBox>
+        <OAuthBox>
           <OAuthButton
             variant="contained"
             color="primary"
@@ -203,9 +220,16 @@ const AuthPage = (): React.ReactElement => {
           >
             Login with Google
           </OAuthButton>
-          {googleCode && <Typography>Access Code: {googleCode}</Typography>}
-        </Box>
-        <Box>
+          {googleCode && (
+            <TextField
+              label="Access Code"
+              variant="filled"
+              value={googleCode}
+              fullWidth
+            />
+          )}
+        </OAuthBox>
+        <OAuthBox display="flex" flexDirection="column">
           <OAuthButton
             variant="contained"
             color="primary"
@@ -218,8 +242,15 @@ const AuthPage = (): React.ReactElement => {
           >
             Login with GitHub
           </OAuthButton>
-          {githubCode && <Typography>Access Code: {githubCode}</Typography>}
-        </Box>
+          {githubCode && (
+            <TextField
+              label="Access Code"
+              variant="filled"
+              value={githubCode}
+              fullWidth
+            />
+          )}
+        </OAuthBox>
       </Box>
     </BaseLayout>
   )
