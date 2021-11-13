@@ -19,29 +19,35 @@ const OAuthButton = styled(Button)`
 `
 
 const AuthPage = (): React.ReactElement => {
-  const openDialog = (url: string) => {
+  const openDialog = (url: string): Promise<OAuthResponse> => {
     const popup = window.open(url, '', 'width=700, height=700,fullscreen=no')
     let openDuration = 0
 
-    const checking = setInterval(() => {
-      const response = ls.get<OAuthResponse | undefined>('oauth-response')
+    const promise = new Promise<OAuthResponse>((resolve, reject) => {
+      const checking = setInterval(() => {
+        const response = ls.get<OAuthResponse | undefined>('oauth-response')
 
-      if (openDuration >= MAX_OPEN_POPUP) {
-        popup?.close()
-        clearInterval(checking)
-      }
-      openDuration += 1000
+        if (response) {
+          resolve(response)
+          clearInterval(checking)
+          ls.remove('oauth-response')
+        }
 
-      if (popup?.closed) {
-        clearInterval(checking)
-      }
+        if (openDuration >= MAX_OPEN_POPUP) {
+          popup?.close()
+          reject(new Error('Timeout'))
+          clearInterval(checking)
+        }
+        openDuration += 1000
 
-      if (response) {
-        console.log(response)
-        clearInterval(checking)
-        ls.remove('oauth-response')
-      }
-    }, 1000)
+        if (popup?.closed) {
+          reject(new Error('Closed'))
+          clearInterval(checking)
+        }
+      }, 1000)
+    })
+
+    return promise
   }
 
   const facebookDialog = () => {
@@ -55,7 +61,9 @@ const AuthPage = (): React.ReactElement => {
     dialogUrlParam.append('redirect_uri', REDIRECT_URI)
     dialogUrlParam.append('client_id', FACEBOOK_APP_ID)
 
-    openDialog(dialogUrl.toString())
+    openDialog(dialogUrl.toString()).then((response) => {
+      console.log(response)
+    })
   }
 
   const googleDialog = () => {
@@ -80,7 +88,9 @@ const AuthPage = (): React.ReactElement => {
     dialogUrlParam.append('client_id', GOOGLE_CLIENT_ID)
     const url = decodeURIComponent(dialogUrl.toString())
 
-    openDialog(url)
+    openDialog(url).then((response) => {
+      console.log(response)
+    })
   }
 
   return (
