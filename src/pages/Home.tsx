@@ -173,7 +173,7 @@ const HomePage = (): React.ReactElement => {
 
   return (
     <BaseLayout>
-      <Typography variant="h4">Login</Typography>
+      <Typography variant="h4">React OAuth Login</Typography>
       <Box
         marginTop="24px"
         display="flex"
