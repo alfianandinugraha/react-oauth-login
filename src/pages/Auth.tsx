@@ -3,10 +3,14 @@ import styled from '@emotion/styled'
 import { Facebook, GitHub, Google } from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
+import * as ls from 'local-storage'
+import { OAuthResponse } from 'types'
 
 const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID || ''
 
 const REDIRECT_URI = 'http://localhost:3000/oauth'
+
+const MAX_OPEN_POPUP = 60000
 
 const OAuthButton = styled(Button)`
   margin-bottom: 16px;
@@ -14,7 +18,28 @@ const OAuthButton = styled(Button)`
 
 const AuthPage = (): React.ReactElement => {
   const openDialog = (url: string) => {
-    window.open(url, '', 'width=700, height=700,fullscreen=no')
+    const popup = window.open(url, '', 'width=700, height=700,fullscreen=no')
+    let openDuration = 0
+
+    const checking = setInterval(() => {
+      const response = ls.get<OAuthResponse | undefined>('oauth-response')
+
+      if (openDuration >= MAX_OPEN_POPUP) {
+        popup?.close()
+        clearInterval(checking)
+      }
+      openDuration += 1000
+
+      if (popup?.closed) {
+        clearInterval(checking)
+      }
+
+      if (response) {
+        console.log(response)
+        clearInterval(checking)
+        ls.remove('oauth-response')
+      }
+    }, 1000)
   }
 
   const facebookDialog = () => {
