@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { OAuthResponse } from 'types'
 import * as ls from 'local-storage'
+import { Box, Typography } from '@mui/material'
 
 const OAuthPage = (): React.ReactElement => {
   const [searchParams] = useSearchParams()
@@ -34,7 +35,25 @@ const OAuthPage = (): React.ReactElement => {
     ls.set('oauth-response', responseError)
     window.close()
   }, [])
-  return <h1>OAuth Page</h1>
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        height: '100vh',
+        width: '100%',
+      }}
+    >
+      <div className="lds-facebook">
+        <div />
+        <div />
+        <div />
+      </div>
+      <Typography sx={{ marginTop: '16px' }}>Redirecting...</Typography>
+    </Box>
+  )
 }
 
 export default OAuthPage
