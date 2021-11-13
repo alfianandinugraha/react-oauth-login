@@ -10,6 +10,8 @@ const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID || ''
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || ''
 
+const GITHUB_CLIENT_ID = '45463c486c3754c97987'
+
 const REDIRECT_URI = 'http://localhost:3000/oauth'
 
 const MAX_OPEN_POPUP = 60000
@@ -17,6 +19,10 @@ const MAX_OPEN_POPUP = 60000
 const OAuthButton = styled(Button)`
   margin-bottom: 16px;
 `
+
+const scopeAsParam = (scopes: string[]) => {
+  return scopes.reduce((rev, curr) => `${rev}+${curr}`)
+}
 
 const AuthPage = (): React.ReactElement => {
   const openDialog = (url: string): Promise<OAuthResponse> => {
@@ -76,16 +82,36 @@ const AuthPage = (): React.ReactElement => {
       'https://www.googleapis.com/auth/userinfo.profile',
       'openid',
     ]
-    const scopeAsParam = scopes.reduce((rev, curr) => `${rev}+${curr}`)
 
     const dialogUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
     const dialogUrlParam = dialogUrl.searchParams
-    dialogUrlParam.append('scope', scopeAsParam)
+    dialogUrlParam.append('scope', scopeAsParam(scopes))
     dialogUrlParam.append('include_granted_scopes', 'true')
     dialogUrlParam.append('response_type', 'code')
     dialogUrlParam.append('state', state)
     dialogUrlParam.append('redirect_uri', REDIRECT_URI)
     dialogUrlParam.append('client_id', GOOGLE_CLIENT_ID)
+    const url = decodeURIComponent(dialogUrl.toString())
+
+    openDialog(url).then((response) => {
+      console.log(response)
+    })
+  }
+
+  const githubDialog = () => {
+    const state = JSON.stringify({
+      vendor: 'github',
+    })
+
+    const scopes = ['read:user', 'user:email']
+
+    const dialogUrl = new URL('https://github.com/login/oauth/authorize')
+    const dialogUrlParam = dialogUrl.searchParams
+    dialogUrlParam.append('client_id', GITHUB_CLIENT_ID)
+    dialogUrlParam.append('redirect_uri', REDIRECT_URI)
+    dialogUrlParam.append('allow_signup', 'true')
+    dialogUrlParam.append('state', state)
+    dialogUrlParam.append('scope', scopeAsParam(scopes))
     const url = decodeURIComponent(dialogUrl.toString())
 
     openDialog(url).then((response) => {
@@ -138,6 +164,7 @@ const AuthPage = (): React.ReactElement => {
             backgroundColor: '#000000',
             '&:hover': { backgroundColor: '#191919' },
           }}
+          onClick={githubDialog}
         >
           Login with GitHub
         </OAuthButton>

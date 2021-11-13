@@ -35,6 +35,31 @@ const OAuthPage = (): React.ReactElement => {
       ls.set('oauth-response', response)
     }
 
+    if (vendor === 'github') {
+      const response: OAuthResponse = {
+        vendor: 'github',
+      }
+      const error = searchParams.get('error')
+      if (error) {
+        const responseError: OAuthResponse = {
+          ...response,
+          error: {
+            reason:
+              searchParams.get('error_description') ||
+              'Failed to get user access',
+            type: searchParams.get('error') || 'access_denied',
+          },
+        }
+        ls.set('oauth-response', responseError)
+        window.close()
+        return
+      }
+
+      const code = searchParams.get('code') || ''
+      const responseSuccess: OAuthResponse = { ...response, success: { code } }
+      ls.set('oauth-response', responseSuccess)
+    }
+
     window.close()
   }, [])
   return <h1>OAuth Page</h1>
