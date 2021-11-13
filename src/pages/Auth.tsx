@@ -11,9 +11,10 @@ const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID || ''
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || ''
 
-const GITHUB_CLIENT_ID = '45463c486c3754c97987'
+const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID || ''
 
-const REDIRECT_URI = 'http://localhost:3000/oauth'
+const REDIRECT_URI =
+  process.env.REACT_APP_REDIRECT_URI || 'http://localhost:3000/oauth'
 
 const MAX_OPEN_POPUP = 60000
 
